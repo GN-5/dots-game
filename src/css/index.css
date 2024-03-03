@@ -1,0 +1,189 @@
+body {
+	font-family: 'PT Serif', serif;
+	font-size: large;
+}
+
+.hero.is-success {
+	background: #F2F6FA;
+	color: #11112a;
+}
+
+.hero-body {
+	padding: 2rem 1.5rem;
+}
+
+.score {
+	justify-content: center;
+}
+
+p.subtitle {
+	padding-top: 1rem;
+}
+
+p.footer-contact {
+	margin-top: 1rem;
+}
+
+p.title {
+	margin-top: 1rem;
+}
+
+.game-table {
+	border-radius: 6px;
+	box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+	margin: auto;
+}
+
+.button.back {
+	margin-top: 1rem;
+}
+
+.home-link {
+	margin-top: 1rem;
+}
+
+.node {
+	width: 50px;
+	height: 50px;
+	position: relative;
+	float: left;
+}
+
+.core {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	position: absolute;
+	left: -10px;
+	top: -10px;
+	margin: auto;
+	z-index: 5;
+}
+
+.core.selected {
+	width: 25px;
+	height: 25px;
+	left: -12px;
+	top: -12px;
+	background-color: #11112a;
+	border-radius: 50%;
+}
+
+.outer-core {
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	top: -40%;
+	left: -40%;
+	z-index: 7;
+}
+
+.edge {
+	position: absolute;
+	z-index: 0;
+}
+
+.right {
+	width: 50px;
+	height: 5px;
+	top: -2px;
+}
+
+.down {
+	width: 5px;
+	height: 50px;
+	left: -2px;
+}
+
+.edge.highlight {
+	background-color: #7032dc;
+}
+
+.owner {
+	z-index: 3;
+	font-size: 2em;
+	line-height: 50px;
+	text-align: center;
+}
+
+.core,
+.edge {
+	background-color: #494949;
+}
+
+
+.game-info {
+	width: 100%;
+	float: left;
+}
+
+input {
+	text-align: center;
+}
+
+.logo-home-page {
+	max-width: 5em;
+}
+
+.login-container {
+	max-width: 30vmax;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 50px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	margin: 1vmin 0;
+	background-color: #11112a;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #202035;
+}
+
+.google-button {
+	background-color: #4285f4;
+	color: #fff;
+}
+
+.google-button:hover {
+	background-color: #357ae8;
+}
+
+.Login-logo {
+	height: 15vmin;
+}
+
+.player-avatar {
+	max-width: 300px;
+	border-radius: 50%;
+	background-color: #444;
+}
+
+.game-container {
+	display: block;
+}
+
+#tsparticles {
+	height: 100vh;
+	width: 100vw;
+}
