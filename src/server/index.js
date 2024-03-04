@@ -1,31 +1,45 @@
 const functions = require('firebase-functions');
-const admin = require('firebase-admin');
 const express = require('express');
-const cors = require('cors');
+const Storage = require('./Storage');
 const { siteUrl } = require('./config');
 
 const app = express();
-app.use(cors({ origin: siteUrl }));
 
-const serviceAccount = require('./serviceAccountKey.json'); // Firebase service account key file
+app.use(function (req, res, next) {
+	// Website you wish to allow to connect
+	res.setHeader('Access-Control-Allow-Origin', siteUrl);
 
-// Initialize Firebase Admin SDK
-admin.initializeApp({
-	credential: admin.credential.cert(serviceAccount),
-	databaseURL: 'https://dots-41c5f-default-rtdb.firebaseio.com'
+	// Request methods you wish to allow
+	res.setHeader(
+		'Access-Control-Allow-Methods',
+		'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+	);
+
+	// Request headers you wish to allow
+	res.setHeader(
+		'Access-Control-Allow-Headers',
+		'X-Requested-With,content-type'
+	);
+
+	// Set to true if you need the website to include cookies in the requests sent
+	// to the API (e.g. in case you use sessions)
+	res.setHeader('Access-Control-Allow-Credentials', true);
+
+	// Pass to next layer of middleware
+	next();
 });
 
-// Define routes
-app.get('/', (req, res) => {
+app.get('/', function (req, res) {
 	res.json({ message: 'server running...' });
 });
 
-app.post('/update-user/:id/:name/:oldId', (req, res) => {
-	// Your logic for updating user
+app.post('/update-user/:id/:name/:oldId', function (req, res) {
+	Storage.updateUser(req.params);
 	res.sendStatus(200);
 });
 
-app.get('/game-list/:userId', async (req, res) => {
+
+app.get('/game-list/:userId', async function (req, res) {
 	try {
 		const current = await Storage.getGameList(req.params.userId, false, 10);
 		const finished = await Storage.getGameList(req.params.userId, true, 10);

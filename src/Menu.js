@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import "./css/index.css";
 
 const Menu = props => {
-    const { gameStatus, gameId, userId } = props;
+    const { gameStatus, gameId, userId, isAuthenticated } = props;
     return (
         <div className="box" style={{ background: `#11112a`, color: `#fff` }}>
             <ul className="menu-list">
@@ -27,6 +27,9 @@ const Menu = props => {
                 <li>
                     <Link to="/rules">Rules</Link>
                 </li>
+                {isAuthenticated && <li>
+                    <Link to="/signout">Signout</Link>
+                </li>}
             </ul>
         </div>
     );

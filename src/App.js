@@ -6,6 +6,7 @@ import GameForm from './GameForm';
 import JoinForm from './JoinForm';
 import Home from './Home';
 import Rules from './Rule';
+import SignOut from './SignOut';
 import ClientSocket from './utilities/ClientSocket';
 import * as auth from './utilities/auth';
 import LogInForm from './LoginForm';
@@ -15,11 +16,13 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        auth.initFb(props.dispatch);
         auth.loadUser(props.dispatch);
 
         this.ClientSocket = new ClientSocket(this);
         this.ClientSocket.bindListeners();
+
+        const { isAuthenticated } = this.props;
+
     }
 
     render() {
@@ -62,6 +65,12 @@ class App extends Component {
                         )}
                     />
                     <Route exact path="/rules" component={Rules} />
+                    <Route
+                        exact path="/signout"
+                        render={props => (
+                            <SignOut socket={socket} {...props} />
+                        )}
+                    />
                 </div>
             </BrowserRouter>
         );

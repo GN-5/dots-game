@@ -2,32 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import logo from './img/Dots_Logo.svg';
 import Menu from './Menu';
-import { ref, onValue } from 'firebase/database';
-import { database } from './firebase';
-import { getAuth } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './server/firebase';
 
-const Home = ({ gameStatus, gameId, user }) => {
-    const [username, setUsername] = useState('');
+const Home = ({ gameStatus, gameId }) => {
+    const [username, setUsername] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
-        const auth = getAuth();
-        if (auth.currentUser) {
-            fetchUserData(auth.currentUser.email);
-        }
-    }, []);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
 
-    const fetchUserData = (email) => {
-        const userRef = ref(database, 'users');
-        onValue(userRef, (snapshot) => {
-            const users = snapshot.val();
-            if (users) {
-                const userData = Object.values(users).find(user => user.email === email);
-                if (userData) {
-                    setUsername(userData.username);
-                }
+                const uid = user.uid;
+                const username = user.email.split("@")[0];
+                setUsername(username);
+                console.log("username", username);
+                console.log("uid", uid)
+                setIsAuthenticated(true);
+            } else {
+
+                console.log("user is logged out")
             }
         });
-    };
+
+
+    }, [])
 
     return (
         <div>
@@ -36,20 +35,21 @@ const Home = ({ gameStatus, gameId, user }) => {
                 The classic Dots game re-imagined for the web.
             </p>
             <div className="subtitle has-text-grey">
-                <p>Hello, {username}</p>
+                {username && <p>Hello, {username}</p>}
                 <br />
                 <br />
             </div>
             <Menu
                 gameStatus={gameStatus}
                 gameId={gameId}
-                userId={user}
+                userId={username}
+                isAuthenticated={isAuthenticated}
             />
             <div>
                 <p className="footer-contact">
                     ©
                     &nbsp;
-                    <a target="_blank" href="mailto:gaurab.neupane@deerwalk.edu.np">heptadroid</a>
+                    <a target="#" href="mailto:gaurab.neupane@deerwalk.edu.np">heptadroid</a>
                 </p>
             </div>
         </div>
@@ -58,8 +58,7 @@ const Home = ({ gameStatus, gameId, user }) => {
 
 const mapStateToProps = state => ({
     gameStatus: state.gameStatus,
-    gameId: state.gameId,
-    availableGames: state.availableGames,
+    gameId: state.gameId
 });
 
 export default connect(mapStateToProps)(Home);

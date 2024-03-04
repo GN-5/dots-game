@@ -1,14 +1,12 @@
-const database = '';
-let siteUrl, dbHost;
+const database = require('./firebase');
+let siteUrl;
 
 const dev = true;
 
 if (dev) {
 	siteUrl = 'http://localhost:3000';
-	dbHost = database;
 } else {
 	siteUrl = 'heptadroid.com';
-	dbHost = database;
 }
 
-module.exports = { siteUrl, dbHost };
+module.exports = { siteUrl, database };
