@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import logo from './img/Dots_Logo.svg'
 import { GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { set, ref } from "firebase/database";
@@ -95,18 +95,7 @@ const LogInForm = () => {
             console.log(user + "is signed out");
         }
     });
-    const handleSignOut = () => {
-        signOut(auth)
-            .then(() => {
-                // Sign-out successful.
-                console.log('User signed out');
-                // Redirect or update state as needed
-            })
-            .catch((error) => {
-                // An error happened.
-                console.error('Error signing out:', error);
-            });
-    }
+
 
     return (
         <div className="login-container">

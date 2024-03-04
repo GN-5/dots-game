@@ -21,8 +21,6 @@ class App extends Component {
         this.ClientSocket = new ClientSocket(this);
         this.ClientSocket.bindListeners();
 
-        const { isAuthenticated } = this.props;
-
     }
 
     render() {
