@@ -4,20 +4,19 @@ import logo from './img/Dots_Logo.svg';
 import Menu from './Menu';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './server/firebase';
+import { getUsername } from './server/Storage';
 
 const Home = ({ gameStatus, gameId }) => {
+    const [uid, setUid] = useState(null);
     const [username, setUsername] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(null);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-
                 const uid = user.uid;
-                const username = user.email.split("@")[0];
-                setUsername(username);
-                console.log("username", username);
-                console.log("uid", uid)
+                setUid(uid);
+                console.log(user.email);
                 setIsAuthenticated(true);
             } else {
 
@@ -26,7 +25,17 @@ const Home = ({ gameStatus, gameId }) => {
         });
 
 
-    }, [])
+    }, []);
+
+    async function fetchData(uid) {
+        try {
+            const fetchedUsername = await getUsername(uid);
+            setUsername(fetchedUsername);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+    fetchData(uid);
 
     return (
         <div>
@@ -42,7 +51,7 @@ const Home = ({ gameStatus, gameId }) => {
             <Menu
                 gameStatus={gameStatus}
                 gameId={gameId}
-                userId={username}
+                userId={uid}
                 isAuthenticated={isAuthenticated}
             />
             <div>

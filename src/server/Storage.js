@@ -1,43 +1,62 @@
 import { database } from './firebase';
-import { ref, set } from 'firebase/database';
+import { ref, set, get, child, update } from 'firebase/database';
 const db = database;
 
-
-
-export async function createUser(data) {
+export async function createUser(uid, email) {
     try {
-        await set(ref(db, 'users').push().data);
+        await set(ref(db, `User/ ${uid}`), {
+            uID: uid,
+            username: email.split('@')[0],
+            email: email,
+            games: {}
+        });
     }
     catch (error) {
         console.log(error);
     }
 }
-export async function updateUser(params) {
-    const id = params.oldId !== 'none' ? params.oldId : params.id;
+export async function updateUsername(uid, newUsername) {
     try {
-        await set(ref(db, 'users/' + id), {
-            name: params.name,
-            id: params.id
+        const userRef = ref(db, `User/ ${uid}`);
+        console.log(uid, newUsername.toString(), userRef);
+        await update(userRef, { username: newUsername.toString() });
+    } catch (error) {
+        console.log("error Occured");
+        throw error;
+    }
+};
+
+export async function getUsername(uid) {
+    const dbRef = ref(db);
+    try {
+        const snapshot = await get(child(dbRef, `User/ ${uid}/username`));
+        if (snapshot.exists()) {
+            console.log(snapshot.val());
+            return snapshot.val().toString();
+        } else {
+            console.log("No data available");
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+}
+
+export async function createGame(uid, gameData) {
+    try {
+        await set(ref(db, `User/ ${uid}/games/${gameData.gameId}`), {
+            gameID: gameData.gameId,
+            opponent: gameData.players.o,
+            score: {
+                x: gameData.score.x,
+                o: gameData.score.o,
+            },
+            size: {
+                r: gameData.size.r,
+                c: gameData.size.c
+            },
+
+            gameState: {}
         });
-    } catch (error) {
-        console.error('Error updating user:', error);
-    }
-}
-
-export async function getUserName(userId) {
-    try {
-        const userSnapshot = await db.ref('users/' + userId).once('value');
-        const userData = userSnapshot.val();
-        return userData ? userData.name : null;
-    } catch (error) {
-        console.error('Error getting user name:', error);
-        return null;
-    }
-}
-
-export async function createGame(data) {
-    try {
-        await set(ref(db, 'Game').push(), data);
     } catch (error) {
         console.error('Error creating game:', error);
     }
@@ -56,7 +75,7 @@ export async function getGameById(id) {
 
 export async function updateGameById(id, data) {
     try {
-        await set(ref(db, 'Game/' + id), data);
+        await set(ref(db, 'games/' + id), data);
         if (data.status && data.status === 'finished') {
             await updatePoints(data.gameId);
         }
@@ -67,7 +86,7 @@ export async function updateGameById(id, data) {
 
 export async function updatePoints(gameId) {
     try {
-        const gameSnapshot = await db.ref('Game/' + gameId).once('value');
+        const gameSnapshot = await db.ref('games/' + gameId).once('value');
         const gameData = gameSnapshot.val();
         if (gameData && !gameData.pointsCounted) {
             const points = gameData.score.x - gameData.score.o;
@@ -76,7 +95,7 @@ export async function updatePoints(gameId) {
                 toUpdate = gameData.users.o;
             }
             await db.ref('users/' + toUpdate + '/points').transaction(currentPoints => currentPoints + Math.abs(points));
-            await db.ref('Game/' + gameId + '/pointsCounted').set(true);
+            await db.ref('games/' + gameId + '/pointsCounted').set(true);
         }
     } catch (error) {
         console.error('Error updating points:', error);

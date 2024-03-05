@@ -39,11 +39,6 @@ module.exports = server => {
                     return;
                 }
                 if (game.status === 'waiting_for_opponent' && game.users.x != data.userId) {
-
-                    //Update everyone about the new PublicGames List
-                    Storage.updateGameById(game.gameId, { public: false }).then(() => {
-                        Storage.getPublicGames().then(games => io.emit('UPDATE_GAME_LIST', games));
-                    });
                     game.status = 'started';
                     game.users.o = data.userId;
                 }
@@ -61,10 +56,6 @@ module.exports = server => {
                     users: game.users,
                     connected: game.connected,
                 };
-                Storage.updateGameById(data.gameId, update);
-
-                // send to peer about the joining event
-                socket.broadcast.to(game.gameId).emit('SYNC', update);
 
                 // send to clinet game info
                 socket.emit('SYNC', {

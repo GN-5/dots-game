@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import logo from './img/Dots_Logo.svg'
 import { GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
-import { set, ref } from "firebase/database";
-import { auth, database } from "./server/firebase";
+import { auth } from "./server/firebase";
 import { useHistory } from 'react-router-dom';
+import { createUser } from "./server/Storage";
 
 
 const provider = new GoogleAuthProvider();
@@ -13,7 +13,6 @@ provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 const LogInForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
     const history = useHistory();
 
     const handleLogIn = (e) => {
@@ -23,9 +22,7 @@ const LogInForm = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // User logged in successfully
-                const username = email.split("@")[0];
-                setUsername(username);
-                console.log('User logged in:', username);
+                console.log('User logged in:', email);
                 history.push('/'); // Redirect to home page after successful login
 
             })
@@ -45,8 +42,7 @@ const LogInForm = () => {
                 // const token = credential.accessToken;
                 // // The signed-in user info.
                 const user = result.user;
-                const username = user.email.split("@")[0];
-                setUsername(username);
+                createUser(user);
                 history.push('/'); // Redirect to home page after successful login
 
             }).catch((error) => {
@@ -71,15 +67,10 @@ const LogInForm = () => {
             .then((userCredential) => {
                 // User signed up successfully
                 const user = userCredential.user;
-                const username = email.split("@")[0]; // Parse username from email
-                setUsername(username);
                 console.log('User signed up:', user);
 
                 // Create user data in the database
-                set(ref(database, 'User/' + user.uid), {
-                    email: user.email,
-                    username: username, // Set the username in the database
-                });
+                createUser(user.uid, user.email);
 
                 history.push('/'); // Redirect to home page after successful signup
             })

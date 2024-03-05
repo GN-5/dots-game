@@ -58,6 +58,14 @@ class Game extends Component {
 			status: state.status,
 			lastMoved: state.lastMoved,
 		});
+
+		// updateGameState(tate.gameId,
+		// 	state.gridNodes,
+		// 	state.xIsNext,
+		// 	state.gameStatus,
+		// 	state.score,
+		// 	state.status,
+		// 	state.lastMoved);
 	}
 
 	nodeClicked(node) {
@@ -93,7 +101,7 @@ class Game extends Component {
 					/>
 				</div>
 				<GameInfo />
-				<p className="button is-dark" style={{ marginTop: 20 }}>
+				<p className="button is-dark is-inline-block" style={{ marginTop: 20 }}>
 					<Link to="/">Go Back</Link>
 				</p>
 			</div>

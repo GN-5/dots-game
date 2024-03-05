@@ -17,9 +17,9 @@ class ShareLink extends React.Component {
   render() {
     return (
       <div>
-        <h3 className="title has-text-grey">Waiting for opponent...</h3>
+        <h3 className="title has-text-grey">Play with Friends!</h3>
         <p className="subtitle has-text-grey">
-          Share this link to play with a friend
+          Share this link to invite someone to your lobby!
         </p>
         <p className="control">
           <input className="input" defaultValue={this.props.value} />
@@ -28,7 +28,7 @@ class ShareLink extends React.Component {
         <CopyToClipboard
           text={this.props.value}
           onCopy={() => this.setState({ copied: true })}>
-          <button className="button is-info">
+          <button className="button is-dark">
             {this.state.copied ? 'Copied' : 'Copy to clipboard'}
           </button>
         </CopyToClipboard>

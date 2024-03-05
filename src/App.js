@@ -8,9 +8,10 @@ import Home from './Home';
 import Rules from './Rule';
 import SignOut from './SignOut';
 import ClientSocket from './utilities/ClientSocket';
-import * as auth from './utilities/auth';
+import * as auth from "./utilities/auth"
 import LogInForm from './LoginForm';
 import "./css/index.css";
+import UpdateUser from './UpdateUser';
 
 class App extends Component {
     constructor(props) {
@@ -67,6 +68,13 @@ class App extends Component {
                         exact path="/signout"
                         render={props => (
                             <SignOut socket={socket} {...props} />
+                        )}
+                    />
+
+                    <Route
+                        exact path="/update"
+                        render={props => (
+                            <UpdateUser socket={socket} history={props.history} />
                         )}
                     />
                 </div>

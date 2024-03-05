@@ -6,7 +6,7 @@ const dev = true;
 if (dev) {
 	siteUrl = 'http://localhost:3000';
 } else {
-	siteUrl = '';
+	siteUrl = 'https://gn-5.github.io/dots-game/';
 }
 
 module.exports = { siteUrl, database };

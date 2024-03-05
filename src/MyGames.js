@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { auth, database } from "./server/firebase";
-import { ref, onValue, } from "firebase/database";
-
+import { ref, onValue, off } from "firebase/database";
+import { useHistory } from "react-router-dom";
+import { getUsername } from './server/Storage';
 const MyGames = () => {
     const [games, setGames] = useState([]);
     const [username, setUsername] = useState('');
+    const history = useHistory();
 
     useEffect(() => {
         // Get username from Firebase Auth
         const user = auth.currentUser;
         if (user) {
-            setUsername(user.username);
+            async function fetchData(uid) {
+                try {
+                    const fetchedUsername = await getUsername(uid);
+                    setUsername(fetchedUsername);
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                }
+            }
+            fetchData(user.uid);
         }
 
         // Fetch games data from Firebase Realtime Database
@@ -40,26 +50,30 @@ const MyGames = () => {
 
         // Unsubscribe from gamesRef on component unmount
         return () => {
-            gamesRef.off();
+            off(gamesRef);
         };
     }, []);
 
+    const handleUpdateUserClick = () => {
+        // Redirect to UpdateUser component
+        history.push('/update');
+    };
+
     return (
-        <div className="container is-centered">
-            <h1 className="is-centered">My Games</h1>
+        <div className="field is-widescreen">
+            <h1 className="is-dark is-size-1">My Games</h1>
             <p className='subtitle has-text-grey'>Hello {username}, here are your games:</p>
-            <div className="table-container is-centered">
-                <table className="table is-bordered is-hoverable is-centered">
+            <div className="table-container is-centered" style={{ width: '100vw', overflowX: 'auto' }}>
+                <table className="table is-bordered is-hoverable is-centered is-6" style={{ width: '100%' }}>
                     <thead>
                         <tr>
                             <th>SN</th>
                             <th>Game ID</th>
-                            <th>Player (X)</th>
-                            <th>Player (O)</th>
-                            <th>Points (X)</th>
-                            <th>Points (O)</th>
-                            <th>Size (R)</th>
-                            <th>Size (C)</th>
+                            <th>Opponent</th>
+                            <th>Points (You)</th>
+                            <th>Points (Opponent)</th>
+                            <th>Size (Row)</th>
+                            <th>Size (Col)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +81,6 @@ const MyGames = () => {
                             <tr key={game.gameId}>
                                 <td>{index + 1}</td>
                                 <td>{game.gameId}</td>
-                                <td>{game.player.x}</td>
                                 <td>{game.player.o}</td>
                                 <td>{game.points.x}</td>
                                 <td>{game.points.o}</td>
@@ -78,7 +91,8 @@ const MyGames = () => {
                     </tbody>
                 </table>
             </div>
-        </div>
+            <button onClick={() => handleUpdateUserClick()}>Update Username</button>
+        </div >
     );
 }
 

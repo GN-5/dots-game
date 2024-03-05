@@ -18,9 +18,9 @@ const Menu = props => {
                 <li>
                     <Link to="/game/start/offline">Play offline</Link>
                 </li>
-                <li>
+                {isAuthenticated && <li>
                     <Link to={`/user/${userId}/games`}>My games</Link>
-                </li>
+                </li>}
                 <li>
                     <Link to="/login">Login</Link>
                 </li>
