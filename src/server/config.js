@@ -6,7 +6,7 @@ const dev = true;
 if (dev) {
 	siteUrl = 'http://localhost:3000';
 } else {
-	siteUrl = 'heptadroid.com';
+	siteUrl = '';
 }
 
 module.exports = { siteUrl, database };

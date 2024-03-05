@@ -32,6 +32,7 @@ const LogInForm = () => {
             .catch((error) => {
                 // Handle errors
                 console.error('Error logging in:', error.message);
+                alert('Invalid credentials. Please check your email and password.');
             });
     }
 
@@ -85,6 +86,12 @@ const LogInForm = () => {
             .catch((error) => {
                 // Handle errors
                 console.error('Error signing up:', error.message);
+                // Check if the error is due to an invalid email address
+                if (error.code === 'auth/invalid-email') {
+                    alert('Invalid email address. Please enter a valid email.');
+                } else {
+                    alert('Error signing up:', error.message);
+                }
             });
     }
 

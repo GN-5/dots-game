@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 import GameContainer from './containers/GameContainer';
 import GameForm from './GameForm';
-import JoinForm from './JoinForm';
+import MyGames from './MyGames';
 import Home from './Home';
 import Rules from './Rule';
 import SignOut from './SignOut';
@@ -50,16 +50,16 @@ class App extends Component {
                     />
                     <Route
                         exact
-                        path="/login"
+                        path="/user/:userId/games"
                         render={props => (
-                            <LogInForm socket={socket} {...props} />
+                            <MyGames socket={socket} {...props} />
                         )}
                     />
                     <Route
                         exact
-                        path="/game/:gameId/join"
+                        path="/login"
                         render={props => (
-                            <JoinForm socket={socket} {...props} />
+                            <LogInForm socket={socket} {...props} />
                         )}
                     />
                     <Route exact path="/rules" component={Rules} />
